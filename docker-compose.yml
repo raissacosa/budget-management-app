@@ -12,6 +12,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: always
+    command: postgres -c password_encryption=md5
 
 volumes:
   postgres_data:
