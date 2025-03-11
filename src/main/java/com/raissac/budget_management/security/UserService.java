@@ -44,10 +44,6 @@ public class UserService {
                 new UsernamePasswordAuthenticationToken(request.email(), request.password())
         );
 
-        if (!authentication.isAuthenticated()) {
-            throw new RuntimeException("Invalid credentials!");
-        }
-
         return jwtUtil.generateToken(request.email());
     }
 }

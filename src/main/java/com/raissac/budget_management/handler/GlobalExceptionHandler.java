@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -33,6 +34,19 @@ public class GlobalExceptionHandler {
                 .body(ExceptionResponse.builder()
                         .errorCode(HttpStatus.BAD_REQUEST.value())
                         .validationErrors(errors)
+                        .build());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ExceptionResponse> handleException(BadCredentialsException ex) {
+
+        logger.error("Bad credentials", ex);
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ExceptionResponse.builder()
+                        .errorCode(HttpStatus.UNAUTHORIZED.value())
+                        .error("Invalid credentials")
+                        .errorDescription("Email or password is inncorect")
                         .build());
     }
 
