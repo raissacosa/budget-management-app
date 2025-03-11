@@ -1,5 +1,6 @@
 package com.raissac.budget_management.handler;
 
+import com.raissac.budget_management.exception.EmailAlreadyUsedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,19 @@ public class GlobalExceptionHandler {
                 .body(ExceptionResponse.builder()
                         .errorCode(HttpStatus.BAD_REQUEST.value())
                         .validationErrors(errors)
+                        .build());
+    }
+
+    @ExceptionHandler(EmailAlreadyUsedException.class)
+    public ResponseEntity<ExceptionResponse> handleException(EmailAlreadyUsedException ex) {
+
+        logger.error("Email already used!", ex);
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(ExceptionResponse.builder()
+                        .errorCode(HttpStatus.CONFLICT.value())
+                        .errorDescription("Email already used!")
+                        .error(ex.getMessage())
                         .build());
     }
 

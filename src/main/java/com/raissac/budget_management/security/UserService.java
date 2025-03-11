@@ -1,5 +1,6 @@
 package com.raissac.budget_management.security;
 
+import com.raissac.budget_management.exception.EmailAlreadyUsedException;
 import com.raissac.budget_management.security.config.JwtUtil;
 import com.raissac.budget_management.security.dto.AuthRequest;
 import com.raissac.budget_management.security.dto.RegisterRequest;
@@ -22,7 +23,7 @@ public class UserService {
 
     public User register(RegisterRequest request) {
         if ( userRepository.findByEmail(request.email()).isPresent() ) {
-            throw new RuntimeException("Email already used!");
+            throw new EmailAlreadyUsedException("Email already used!");
         }
 
         User user = User.builder()
