@@ -1,14 +1,22 @@
 package com.raissac.budget_management.category.service;
 
 import com.raissac.budget_management.category.dto.CategoryRequest;
+import com.raissac.budget_management.category.dto.CategoryResponse;
 import com.raissac.budget_management.category.dto.CategoryUpdateRequest;
 import com.raissac.budget_management.category.entity.Category;
+import com.raissac.budget_management.category.mapper.CategoryMapper;
 import com.raissac.budget_management.category.repository.CategoryRepository;
+import com.raissac.budget_management.common.PageResponse;
 import com.raissac.budget_management.exception.CategoryAlreadyExistsException;
 import com.raissac.budget_management.exception.CategoryNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,6 +24,7 @@ import java.util.Optional;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
     public Category createCategory(CategoryRequest request) {
         Optional<Category> existingCategory = categoryRepository.findByName(request.name());
@@ -46,5 +55,23 @@ public class CategoryService {
         category.setActive(request.active());
 
         return categoryRepository.save(category);
+    }
+
+    public PageResponse<CategoryResponse> findAllCategories(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+        Page<Category> categories = categoryRepository.findAll(pageable);
+
+        List<CategoryResponse> categoryResponseList = categories
+                .stream()
+                .map(categoryMapper::toCategoryResponse)
+                .toList();
+
+        return new PageResponse<>(categoryResponseList,
+                categories.getNumber(),
+                categories.getNumberOfElements(),
+                categories.getTotalPages(),
+                categories.isFirst(),
+                categories.isLast());
     }
 }

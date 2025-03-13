@@ -1,8 +1,10 @@
 package com.raissac.budget_management.category.controller;
 
 import com.raissac.budget_management.category.dto.CategoryRequest;
+import com.raissac.budget_management.category.dto.CategoryResponse;
 import com.raissac.budget_management.category.dto.CategoryUpdateRequest;
 import com.raissac.budget_management.category.service.CategoryService;
+import com.raissac.budget_management.common.PageResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,4 +28,13 @@ public class CategoryController {
         categoryService.updateCategory(id, category);
         return ResponseEntity.ok("Category updated successfully");
     }
+
+    @GetMapping
+    public ResponseEntity<PageResponse<CategoryResponse>> findAllCategories(
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size) {
+        return ResponseEntity.ok(categoryService.findAllCategories(page, size));
+
+    }
+
 }
