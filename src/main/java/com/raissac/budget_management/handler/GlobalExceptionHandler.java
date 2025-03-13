@@ -1,6 +1,7 @@
 package com.raissac.budget_management.handler;
 
 import com.raissac.budget_management.exception.CategoryAlreadyExistsException;
+import com.raissac.budget_management.exception.CategoryNotFoundException;
 import com.raissac.budget_management.exception.EmailAlreadyUsedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,6 +74,19 @@ public class GlobalExceptionHandler {
                 .body(ExceptionResponse.builder()
                         .errorCode(HttpStatus.CONFLICT.value())
                         .errorDescription("Category already exists!")
+                        .error(ex.getMessage())
+                        .build());
+    }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleException(CategoryNotFoundException ex) {
+
+        logger.error("Category not found!", ex);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ExceptionResponse.builder()
+                        .errorCode(HttpStatus.NOT_FOUND.value())
+                        .errorDescription("Category not found!")
                         .error(ex.getMessage())
                         .build());
     }
