@@ -1,5 +1,6 @@
 package com.raissac.budget_management.category.service;
 
+import com.raissac.budget_management.category.dto.CategoryActiveResponse;
 import com.raissac.budget_management.category.dto.CategoryRequest;
 import com.raissac.budget_management.category.dto.CategoryResponse;
 import com.raissac.budget_management.category.dto.CategoryUpdateRequest;
@@ -73,5 +74,24 @@ public class CategoryService {
                 categories.getTotalPages(),
                 categories.isFirst(),
                 categories.isLast());
+    }
+
+    public PageResponse<CategoryActiveResponse> findAllActiveCategories(int page, int size){
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+        Page<Category> categories = categoryRepository.findAllByActiveTrue(pageable);
+
+        List<CategoryActiveResponse> categoryResponseList = categories
+                .stream()
+                .map(categoryMapper::toCategoryActiveResponse)
+                .toList();
+
+        return new PageResponse<>(categoryResponseList,
+                categories.getNumber(),
+                categories.getNumberOfElements(),
+                categories.getTotalPages(),
+                categories.isFirst(),
+                categories.isLast());
+
     }
 }

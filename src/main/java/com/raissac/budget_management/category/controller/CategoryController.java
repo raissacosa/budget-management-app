@@ -1,5 +1,6 @@
 package com.raissac.budget_management.category.controller;
 
+import com.raissac.budget_management.category.dto.CategoryActiveResponse;
 import com.raissac.budget_management.category.dto.CategoryRequest;
 import com.raissac.budget_management.category.dto.CategoryResponse;
 import com.raissac.budget_management.category.dto.CategoryUpdateRequest;
@@ -34,7 +35,14 @@ public class CategoryController {
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size) {
         return ResponseEntity.ok(categoryService.findAllCategories(page, size));
+    }
 
+    @GetMapping("/active")
+    public ResponseEntity<PageResponse<CategoryActiveResponse>> findAllActiveCategories(
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size
+    ) {
+        return ResponseEntity.ok(categoryService.findAllActiveCategories(page, size));
     }
 
 }
