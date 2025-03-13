@@ -1,9 +1,11 @@
 package com.raissac.budget_management.security.entity;
 
+import com.raissac.budget_management.transaction.entity.Transaction;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -35,5 +37,8 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany(mappedBy = "user")
+    private List<Transaction> transactions;
 
 }

@@ -1,7 +1,10 @@
 package com.raissac.budget_management.category.entity;
 
+import com.raissac.budget_management.transaction.entity.Transaction;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -21,4 +24,7 @@ public class Category {
 
     @Column(nullable = false)
     private boolean active;
+
+    @OneToMany(mappedBy = "category")
+    private List<Transaction> transactions;
 }
