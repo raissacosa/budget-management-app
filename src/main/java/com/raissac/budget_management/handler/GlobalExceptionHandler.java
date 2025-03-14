@@ -3,6 +3,7 @@ package com.raissac.budget_management.handler;
 import com.raissac.budget_management.exception.CategoryAlreadyExistsException;
 import com.raissac.budget_management.exception.CategoryNotFoundException;
 import com.raissac.budget_management.exception.EmailAlreadyUsedException;
+import com.raissac.budget_management.exception.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -87,6 +88,19 @@ public class GlobalExceptionHandler {
                 .body(ExceptionResponse.builder()
                         .errorCode(HttpStatus.NOT_FOUND.value())
                         .errorDescription("Category not found!")
+                        .error(ex.getMessage())
+                        .build());
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleException(UserNotFoundException ex){
+
+        logger.error("User not found!", ex);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ExceptionResponse.builder()
+                        .errorCode(HttpStatus.NOT_FOUND.value())
+                        .errorDescription("User not found!")
                         .error(ex.getMessage())
                         .build());
     }

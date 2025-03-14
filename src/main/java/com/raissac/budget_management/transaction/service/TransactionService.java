@@ -4,6 +4,7 @@ import com.raissac.budget_management.category.entity.Category;
 import com.raissac.budget_management.category.repository.CategoryRepository;
 import com.raissac.budget_management.common.PageResponse;
 import com.raissac.budget_management.exception.CategoryNotFoundException;
+import com.raissac.budget_management.exception.UserNotFoundException;
 import com.raissac.budget_management.security.entity.User;
 import com.raissac.budget_management.security.repository.UserRepository;
 import com.raissac.budget_management.transaction.dto.TransactionFilterRequest;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,7 +42,7 @@ public class TransactionService {
         String email = auth.getName();
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         Category category = categoryRepository.findById(request.categoryId())
                 .orElseThrow(() -> new CategoryNotFoundException("Category not found"));
@@ -63,7 +65,7 @@ public class TransactionService {
         String email = auth.getName();
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("date").ascending());
 
