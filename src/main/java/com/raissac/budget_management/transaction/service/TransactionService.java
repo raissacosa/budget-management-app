@@ -1,6 +1,7 @@
 package com.raissac.budget_management.transaction.service;
 
-import com.raissac.budget_management.category.dto.TotalSpentPerCategoryResponse;
+import com.raissac.budget_management.transaction.dto.BalanceResponse;
+import com.raissac.budget_management.transaction.dto.TotalSpentPerCategoryResponse;
 import com.raissac.budget_management.category.entity.Category;
 import com.raissac.budget_management.category.repository.CategoryRepository;
 import com.raissac.budget_management.common.PageResponse;
@@ -28,6 +29,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -117,4 +119,14 @@ public class TransactionService {
         return transactionRepository.getTotalSpentPerCategory(email);
     }
 
+    public BalanceResponse getAccountBalance(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+
+        BigDecimal income = transactionRepository.getTotalIncome(email);
+        BigDecimal expenses = transactionRepository.getTotalExpenses(email);
+        BigDecimal balance = income.subtract(expenses);
+
+        return new BalanceResponse(income,expenses,balance);
+    }
 }

@@ -1,10 +1,7 @@
 package com.raissac.budget_management.transaction.controller;
 
-import com.raissac.budget_management.category.dto.TotalSpentPerCategoryResponse;
+import com.raissac.budget_management.transaction.dto.*;
 import com.raissac.budget_management.common.PageResponse;
-import com.raissac.budget_management.transaction.dto.TransactionFilterRequest;
-import com.raissac.budget_management.transaction.dto.TransactionRequest;
-import com.raissac.budget_management.transaction.dto.TransactionResponse;
 import com.raissac.budget_management.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -44,5 +41,10 @@ public class TransactionController {
     public ResponseEntity<List<TotalSpentPerCategoryResponse>> getSpentByCategory()
     {
         return ResponseEntity.ok(transactionService.getTotalSpentPerCategory());
+    }
+
+    @GetMapping("/balance")
+    public ResponseEntity<BalanceResponse> getAccountBalance(){
+        return ResponseEntity.ok(transactionService.getAccountBalance());
     }
 }

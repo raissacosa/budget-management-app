@@ -1,4 +1,4 @@
-package com.raissac.budget_management.category.dto;
+package com.raissac.budget_management.transaction.dto;
 
 import java.math.BigDecimal;
 
