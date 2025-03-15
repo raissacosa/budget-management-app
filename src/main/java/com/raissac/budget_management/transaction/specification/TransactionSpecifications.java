@@ -16,7 +16,8 @@ public class TransactionSpecifications {
                 byUser(user)
                         .and(minAmount(request.minAmount()))
                         .and(maxAmount(request.maxAmount()))
-                        .and(date(request.date()))
+                        .and(startDate(request.startDate()))
+                        .and(endDate(request.endDate()))
                         .and(type(request.type()))
                         .and(category(request.categoryId()))
         );
@@ -38,8 +39,12 @@ public class TransactionSpecifications {
         return (root, query, cb) -> categoryId != null ? cb.equal(root.get("category").get("id"), categoryId) : null;
     }
 
-    public static Specification<Transaction> date(LocalDate date){
-        return (root, query, cb) -> date != null ? cb.equal(root.get("date"), date) : null;
+    public static Specification<Transaction> startDate(LocalDate startDate){
+        return (root, query, cb) -> startDate != null ? cb.greaterThanOrEqualTo(root.get("date"), startDate) : null;
+    }
+
+    public static Specification<Transaction> endDate(LocalDate endDate){
+        return (root, query, cb) -> endDate != null ? cb.lessThanOrEqualTo(root.get("date"), endDate) : null;
     }
 
     public static Specification<Transaction> type(TransactionType type){

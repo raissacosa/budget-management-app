@@ -8,7 +8,8 @@ import java.time.LocalDate;
 public record TransactionFilterRequest(
         BigDecimal minAmount,
         BigDecimal maxAmount,
-        LocalDate date,
+        LocalDate startDate,
+        LocalDate endDate,
         TransactionType type,
         Long categoryId
 ) {
