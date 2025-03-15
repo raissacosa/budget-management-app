@@ -3,7 +3,9 @@ package com.raissac.budget_management.transaction.service;
 import com.raissac.budget_management.category.entity.Category;
 import com.raissac.budget_management.category.repository.CategoryRepository;
 import com.raissac.budget_management.common.PageResponse;
+import com.raissac.budget_management.exception.AccessDeniedException;
 import com.raissac.budget_management.exception.CategoryNotFoundException;
+import com.raissac.budget_management.exception.TransactionNotFoundException;
 import com.raissac.budget_management.exception.UserNotFoundException;
 import com.raissac.budget_management.security.entity.User;
 import com.raissac.budget_management.security.repository.UserRepository;
@@ -85,6 +87,24 @@ public class TransactionService {
                 transactions.isFirst(),
                 transactions.isLast()
         );
+
+    }
+
+    public void deleteTransaction(Long id){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        Transaction transaction = transactionRepository.findById(id)
+                .orElseThrow(() -> new TransactionNotFoundException("Transaction with id: " + id + "not found"));
+
+        if (!transaction.getUser().getId().equals(user.getId())) {
+            throw new AccessDeniedException("You are not allowed to delete this transaction");
+        }
+        transactionRepository.deleteById(id);
 
     }
 

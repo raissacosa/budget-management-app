@@ -1,9 +1,6 @@
 package com.raissac.budget_management.handler;
 
-import com.raissac.budget_management.exception.CategoryAlreadyExistsException;
-import com.raissac.budget_management.exception.CategoryNotFoundException;
-import com.raissac.budget_management.exception.EmailAlreadyUsedException;
-import com.raissac.budget_management.exception.UserNotFoundException;
+import com.raissac.budget_management.exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -101,6 +98,32 @@ public class GlobalExceptionHandler {
                 .body(ExceptionResponse.builder()
                         .errorCode(HttpStatus.NOT_FOUND.value())
                         .errorDescription("User not found!")
+                        .error(ex.getMessage())
+                        .build());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ExceptionResponse> handleException(AccessDeniedException ex){
+
+        logger.error("Access denied!", ex);
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ExceptionResponse.builder()
+                        .errorCode(HttpStatus.UNAUTHORIZED.value())
+                        .errorDescription("Access denied!")
+                        .error(ex.getMessage())
+                        .build());
+    }
+
+    @ExceptionHandler(TransactionNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleException(TransactionNotFoundException ex){
+
+        logger.error("Transaction not found!", ex);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ExceptionResponse.builder()
+                        .errorCode(HttpStatus.NOT_FOUND.value())
+                        .errorDescription("Transaction not found!")
                         .error(ex.getMessage())
                         .build());
     }

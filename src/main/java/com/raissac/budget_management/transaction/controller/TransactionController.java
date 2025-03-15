@@ -32,4 +32,10 @@ public class TransactionController {
     ) {
         return ResponseEntity.ok(transactionService.findAllTransactions(request, page, size));
     }
+
+    @DeleteMapping({"/{id}"})
+    public ResponseEntity<String> deleteTransaction(@PathVariable Long id){
+        transactionService.deleteTransaction(id);
+        return ResponseEntity.ok("Transaction deleted successfully");
+    }
 }
