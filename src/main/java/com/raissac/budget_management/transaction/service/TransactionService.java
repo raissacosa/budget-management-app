@@ -1,7 +1,6 @@
 package com.raissac.budget_management.transaction.service;
 
-import com.raissac.budget_management.transaction.dto.BalanceResponse;
-import com.raissac.budget_management.transaction.dto.TotalSpentPerCategoryResponse;
+import com.raissac.budget_management.transaction.dto.*;
 import com.raissac.budget_management.category.entity.Category;
 import com.raissac.budget_management.category.repository.CategoryRepository;
 import com.raissac.budget_management.common.PageResponse;
@@ -11,9 +10,6 @@ import com.raissac.budget_management.exception.TransactionNotFoundException;
 import com.raissac.budget_management.exception.UserNotFoundException;
 import com.raissac.budget_management.security.entity.User;
 import com.raissac.budget_management.security.repository.UserRepository;
-import com.raissac.budget_management.transaction.dto.TransactionFilterRequest;
-import com.raissac.budget_management.transaction.dto.TransactionRequest;
-import com.raissac.budget_management.transaction.dto.TransactionResponse;
 import com.raissac.budget_management.transaction.entity.Transaction;
 import com.raissac.budget_management.transaction.mapper.TransactionMapper;
 import com.raissac.budget_management.transaction.repository.TransactionRepository;
@@ -30,6 +26,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.Month;
 import java.util.List;
 
 @Service
@@ -128,5 +125,22 @@ public class TransactionService {
         BigDecimal balance = income.subtract(expenses);
 
         return new BalanceResponse(income,expenses,balance);
+    }
+
+    public List<MonthlyTransactionSummaryResponse> getMonthlySummary(int year){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+
+        List<Object[]> rows = transactionRepository.getMonthlySummary(email, year);
+
+        return rows.stream()
+                .map(row -> new MonthlyTransactionSummaryResponse(
+                        Month.of((int) row[0]),
+                        (BigDecimal) row[1],
+                        (BigDecimal) row[2]
+                ))
+                .toList();
+
     }
 }

@@ -47,4 +47,11 @@ public class TransactionController {
     public ResponseEntity<BalanceResponse> getAccountBalance(){
         return ResponseEntity.ok(transactionService.getAccountBalance());
     }
+
+    @GetMapping("/summary/monthly")
+    public ResponseEntity<List<MonthlyTransactionSummaryResponse>> getMonthlySummary(@RequestParam int year){
+        return ResponseEntity.ok(transactionService.getMonthlySummary(year));
+    }
+
+
 }
