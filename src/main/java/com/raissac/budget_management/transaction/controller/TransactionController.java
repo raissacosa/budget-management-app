@@ -1,5 +1,6 @@
 package com.raissac.budget_management.transaction.controller;
 
+import com.raissac.budget_management.category.dto.TotalSpentPerCategoryResponse;
 import com.raissac.budget_management.common.PageResponse;
 import com.raissac.budget_management.transaction.dto.TransactionFilterRequest;
 import com.raissac.budget_management.transaction.dto.TransactionRequest;
@@ -37,5 +38,11 @@ public class TransactionController {
     public ResponseEntity<String> deleteTransaction(@PathVariable Long id){
         transactionService.deleteTransaction(id);
         return ResponseEntity.ok("Transaction deleted successfully");
+    }
+
+    @GetMapping("/expenses/by-category")
+    public ResponseEntity<List<TotalSpentPerCategoryResponse>> getSpentByCategory()
+    {
+        return ResponseEntity.ok(transactionService.getTotalSpentPerCategory());
     }
 }

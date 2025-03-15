@@ -1,5 +1,6 @@
 package com.raissac.budget_management.transaction.service;
 
+import com.raissac.budget_management.category.dto.TotalSpentPerCategoryResponse;
 import com.raissac.budget_management.category.entity.Category;
 import com.raissac.budget_management.category.repository.CategoryRepository;
 import com.raissac.budget_management.common.PageResponse;
@@ -106,6 +107,14 @@ public class TransactionService {
         }
         transactionRepository.deleteById(id);
 
+    }
+
+    public List<TotalSpentPerCategoryResponse> getTotalSpentPerCategory(){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+
+        return transactionRepository.getTotalSpentPerCategory(email);
     }
 
 }
