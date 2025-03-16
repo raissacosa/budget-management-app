@@ -128,6 +128,19 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
+    @ExceptionHandler(CsvExportException.class)
+    public ResponseEntity<ExceptionResponse> handleException(CsvExportException ex){
+
+        logger.error("CSV export error!", ex);
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ExceptionResponse.builder()
+                        .errorCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                        .errorDescription("CSV export error!")
+                        .error(ex.getMessage())
+                        .build());
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(Exception ex) {
 

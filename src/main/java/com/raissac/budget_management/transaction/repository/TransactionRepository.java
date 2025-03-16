@@ -65,4 +65,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long>,
             ORDER BY SUM(t.amount) DESC
             """)
     List<TopSpendingCategoryResponse> findTopSpendingCategories (String email, Pageable pageable);
+
+    List<Transaction> findAllByUserEmail(String email);
 }

@@ -1,13 +1,10 @@
 package com.raissac.budget_management.transaction.service;
 
+import com.raissac.budget_management.exception.*;
 import com.raissac.budget_management.transaction.dto.*;
 import com.raissac.budget_management.category.entity.Category;
 import com.raissac.budget_management.category.repository.CategoryRepository;
 import com.raissac.budget_management.common.PageResponse;
-import com.raissac.budget_management.exception.AccessDeniedException;
-import com.raissac.budget_management.exception.CategoryNotFoundException;
-import com.raissac.budget_management.exception.TransactionNotFoundException;
-import com.raissac.budget_management.exception.UserNotFoundException;
 import com.raissac.budget_management.security.entity.User;
 import com.raissac.budget_management.security.repository.UserRepository;
 import com.raissac.budget_management.transaction.entity.Transaction;
@@ -15,6 +12,8 @@ import com.raissac.budget_management.transaction.mapper.TransactionMapper;
 import com.raissac.budget_management.transaction.repository.TransactionRepository;
 import com.raissac.budget_management.transaction.specification.TransactionSpecifications;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +24,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.time.Month;
 import java.util.List;
@@ -151,5 +154,35 @@ public class TransactionService {
 
         Pageable top3 = PageRequest.of(0,3);
         return transactionRepository.findTopSpendingCategories(email, top3);
+    }
+
+    public ByteArrayInputStream exportTransactionsToCSV(){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+
+        List<Transaction> transactions = transactionRepository.findAllByUserEmail(email);
+
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream();
+             CSVPrinter csvPrinter = new CSVPrinter(new PrintWriter(out),
+                     CSVFormat.DEFAULT.withHeader("ID", "Amount", "Date", "Description", "Type", "Category"))) {
+
+            for (Transaction t : transactions) {
+                csvPrinter.printRecord(
+                        t.getId(),
+                        t.getAmount(),
+                        t.getDate(),
+                        t.getDescription(),
+                        t.getType(),
+                        t.getCategory().getName()
+                );
+            }
+
+            csvPrinter.flush();
+            return new ByteArrayInputStream(out.toByteArray());
+
+        } catch (IOException e) {
+            throw new CsvExportException("Failed to export CSV: " + e.getMessage());
+        }
     }
 }

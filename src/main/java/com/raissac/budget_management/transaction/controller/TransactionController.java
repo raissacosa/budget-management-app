@@ -4,9 +4,13 @@ import com.raissac.budget_management.transaction.dto.*;
 import com.raissac.budget_management.common.PageResponse;
 import com.raissac.budget_management.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 @RestController()
@@ -56,6 +60,16 @@ public class TransactionController {
     @GetMapping("/expenses/top-categories")
     public ResponseEntity<List<TopSpendingCategoryResponse>> getTopSpendingCategories(){
         return ResponseEntity.ok(transactionService.getTopSpendingCategories());
+    }
+
+    @GetMapping("/export")
+    public ResponseEntity<InputStreamResource> exportCSV(){
+        ByteArrayInputStream csv = transactionService.exportTransactionsToCSV();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=transactions.csv")
+                .contentType(MediaType.parseMediaType("text/csv"))
+                .body(new InputStreamResource(csv));
     }
 
 
