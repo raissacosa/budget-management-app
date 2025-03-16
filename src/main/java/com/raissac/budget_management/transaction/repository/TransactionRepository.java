@@ -1,8 +1,10 @@
 package com.raissac.budget_management.transaction.repository;
 
 import com.raissac.budget_management.transaction.dto.MonthlyTransactionSummaryResponse;
+import com.raissac.budget_management.transaction.dto.TopSpendingCategoryResponse;
 import com.raissac.budget_management.transaction.dto.TotalSpentPerCategoryResponse;
 import com.raissac.budget_management.transaction.entity.Transaction;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -49,4 +51,18 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long>,
             ORDER BY MONTH(t.date)   
             """)
     List<Object[]> getMonthlySummary(String email, int year);
+
+    @Query("""
+            SELECT new com.raissac.budget_management.transaction.dto.TopSpendingCategoryResponse(
+                         t.category.name,
+                         SUM(t.amount)
+                        )
+            FROM Transaction t
+            WHERE t.user.email = :email 
+            AND t.type = 'EXPENSE'
+            AND t.category.active = true
+            GROUP BY t.category.name
+            ORDER BY SUM(t.amount) DESC
+            """)
+    List<TopSpendingCategoryResponse> findTopSpendingCategories (String email, Pageable pageable);
 }

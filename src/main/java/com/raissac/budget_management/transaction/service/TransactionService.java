@@ -143,4 +143,13 @@ public class TransactionService {
                 .toList();
 
     }
+
+    public List<TopSpendingCategoryResponse> getTopSpendingCategories(){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+
+        Pageable top3 = PageRequest.of(0,3);
+        return transactionRepository.findTopSpendingCategories(email, top3);
+    }
 }

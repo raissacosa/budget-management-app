@@ -53,5 +53,10 @@ public class TransactionController {
         return ResponseEntity.ok(transactionService.getMonthlySummary(year));
     }
 
+    @GetMapping("/expenses/top-categories")
+    public ResponseEntity<List<TopSpendingCategoryResponse>> getTopSpendingCategories(){
+        return ResponseEntity.ok(transactionService.getTopSpendingCategories());
+    }
+
 
 }
