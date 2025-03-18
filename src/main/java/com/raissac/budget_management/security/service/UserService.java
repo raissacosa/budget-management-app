@@ -8,6 +8,8 @@ import com.raissac.budget_management.security.entity.Role;
 import com.raissac.budget_management.security.entity.User;
 import com.raissac.budget_management.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -35,14 +39,22 @@ public class UserService {
                 .role(Role.USER)
                 .build();
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        logger.info("User with email {} created successfully", savedUser.getEmail());
+
+        return savedUser;
     }
 
     public String login(AuthRequest request, AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
 
+        logger.info("Login attempt for email: {}", request.email());
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.email(), request.password())
         );
+
+        logger.info("User {} authenticated successfully", request.email());
 
         return jwtUtil.generateToken(request.email());
     }

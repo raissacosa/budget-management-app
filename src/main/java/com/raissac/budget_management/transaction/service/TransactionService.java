@@ -1,5 +1,6 @@
 package com.raissac.budget_management.transaction.service;
 
+import com.raissac.budget_management.category.service.CategoryService;
 import com.raissac.budget_management.exception.*;
 import com.raissac.budget_management.transaction.dto.*;
 import com.raissac.budget_management.category.entity.Category;
@@ -14,6 +15,8 @@ import com.raissac.budget_management.transaction.specification.TransactionSpecif
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +38,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class TransactionService {
+
+    private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
 
     private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
@@ -61,7 +66,11 @@ public class TransactionService {
                 .user(user)
                 .build();
 
-        return transactionRepository.save(newTransaction);
+        Transaction savedTransaction = transactionRepository.save(newTransaction);
+
+        logger.info("Transaction with id {} created successfully", savedTransaction.getId());
+
+        return savedTransaction;
     }
 
     public PageResponse<TransactionResponse> findAllTransactions(TransactionFilterRequest request, int page, int size){
@@ -81,6 +90,8 @@ public class TransactionService {
         List<TransactionResponse> transactionResponses = transactions.stream()
                 .map(transactionMapper::toTransactionResponse)
                 .toList();
+
+        logger.info("Fetched {} transactions", transactionResponses.size());
 
         return new PageResponse<>(
                 transactionResponses,
@@ -109,12 +120,15 @@ public class TransactionService {
         }
         transactionRepository.deleteById(id);
 
+        logger.info("Transaction with id {} was successfully deleted", id);
     }
 
     public List<TotalSpentPerCategoryResponse> getTotalSpentPerCategory(){
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
+
+        logger.info("Fetched total spent per category for user {}", email);
 
         return transactionRepository.getTotalSpentPerCategory(email);
     }
@@ -127,6 +141,8 @@ public class TransactionService {
         BigDecimal expenses = transactionRepository.getTotalExpenses(email);
         BigDecimal balance = income.subtract(expenses);
 
+        logger.info("Fetched balance for user {}", email);
+
         return new BalanceResponse(income,expenses,balance);
     }
 
@@ -136,6 +152,8 @@ public class TransactionService {
         String email = auth.getName();
 
         List<Object[]> rows = transactionRepository.getMonthlySummary(email, year);
+
+        logger.info("Fetched monthly summary for user {}, year {}", email, year);
 
         return rows.stream()
                 .map(row -> new MonthlyTransactionSummaryResponse(
@@ -153,6 +171,9 @@ public class TransactionService {
         String email = auth.getName();
 
         Pageable top3 = PageRequest.of(0,3);
+
+        logger.info("Fetched top spending categories for user {}", email);
+
         return transactionRepository.findTopSpendingCategories(email, top3);
     }
 
@@ -179,6 +200,9 @@ public class TransactionService {
             }
 
             csvPrinter.flush();
+
+            logger.info("Exported {} transactions to CSV for user {}", transactions.size(), email);
+
             return new ByteArrayInputStream(out.toByteArray());
 
         } catch (IOException e) {

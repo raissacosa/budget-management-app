@@ -10,7 +10,10 @@ import com.raissac.budget_management.category.repository.CategoryRepository;
 import com.raissac.budget_management.common.PageResponse;
 import com.raissac.budget_management.exception.CategoryAlreadyExistsException;
 import com.raissac.budget_management.exception.CategoryNotFoundException;
+import com.raissac.budget_management.security.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +26,8 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
+
+    private static final Logger logger = LoggerFactory.getLogger(CategoryService.class);
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
@@ -38,7 +43,11 @@ public class CategoryService {
                 .name(request.name())
                 .active(true)
                 .build();
-        return categoryRepository.save(newCategory);
+        Category savedCategory = categoryRepository.save(newCategory);
+
+        logger.info("Category with name {} created successfully", savedCategory.getName());
+
+        return savedCategory;
     }
 
     public Category updateCategory(Long id, CategoryUpdateRequest request) {
@@ -55,7 +64,11 @@ public class CategoryService {
         category.setName(request.name());
         category.setActive(request.active());
 
-        return categoryRepository.save(category);
+        Category savedCategory = categoryRepository.save(category);
+
+        logger.info("Category updated: id={}, name={}, active={}", savedCategory.getId(), savedCategory.getName(), savedCategory.isActive());
+
+        return savedCategory;
     }
 
     public PageResponse<CategoryResponse> findAllCategories(int page, int size) {
@@ -67,6 +80,8 @@ public class CategoryService {
                 .stream()
                 .map(categoryMapper::toCategoryResponse)
                 .toList();
+
+        logger.info("Fetched {} categories", categoryResponseList.size());
 
         return new PageResponse<>(categoryResponseList,
                 categories.getNumber(),
@@ -85,6 +100,8 @@ public class CategoryService {
                 .stream()
                 .map(categoryMapper::toCategoryActiveResponse)
                 .toList();
+
+        logger.info("Fetched {} active categories", categoryResponseList.size());
 
         return new PageResponse<>(categoryResponseList,
                 categories.getNumber(),
