@@ -27,10 +27,10 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests( auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/category").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/category/active").hasAnyRole("USER","ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/v1/category").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/category/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/categories").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/categories/active").hasAnyRole("USER","ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/categories").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/categories/*").hasRole("ADMIN")
                         .requestMatchers("/api/v1/transactions/**").hasRole("USER")
                         .anyRequest().authenticated())
                 .sessionManagement( session -> session

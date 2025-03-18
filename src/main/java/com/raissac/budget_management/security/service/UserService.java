@@ -1,4 +1,4 @@
-package com.raissac.budget_management.security;
+package com.raissac.budget_management.security.service;
 
 import com.raissac.budget_management.exception.EmailAlreadyUsedException;
 import com.raissac.budget_management.security.config.JwtUtil;

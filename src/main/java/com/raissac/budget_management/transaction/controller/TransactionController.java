@@ -3,6 +3,7 @@ package com.raissac.budget_management.transaction.controller;
 import com.raissac.budget_management.transaction.dto.*;
 import com.raissac.budget_management.common.PageResponse;
 import com.raissac.budget_management.transaction.service.TransactionService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -21,7 +22,7 @@ public class TransactionController {
     private final TransactionService transactionService;
 
     @PostMapping
-    public ResponseEntity<String> createTransaction(@RequestBody TransactionRequest transactionRequest) {
+    public ResponseEntity<String> createTransaction(@Valid @RequestBody TransactionRequest transactionRequest) {
         transactionService.createTransaction(transactionRequest);
         return ResponseEntity.ok("Transaction created successfully");
     }

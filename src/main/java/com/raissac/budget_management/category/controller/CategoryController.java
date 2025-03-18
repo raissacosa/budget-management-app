@@ -1,6 +1,6 @@
 package com.raissac.budget_management.category.controller;
 
-import com.raissac.budget_management.category.dto.CategoryActiveResponse;
+import com.raissac.budget_management.category.dto.ActiveCategoryResponse;
 import com.raissac.budget_management.category.dto.CategoryRequest;
 import com.raissac.budget_management.category.dto.CategoryResponse;
 import com.raissac.budget_management.category.dto.CategoryUpdateRequest;
@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/api/v1/category")
+@RequestMapping(value = "/api/v1/categories")
 @RequiredArgsConstructor
 public class CategoryController {
 
@@ -38,7 +38,7 @@ public class CategoryController {
     }
 
     @GetMapping("/active")
-    public ResponseEntity<PageResponse<CategoryActiveResponse>> findAllActiveCategories(
+    public ResponseEntity<PageResponse<ActiveCategoryResponse>> findAllActiveCategories(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size
     ) {

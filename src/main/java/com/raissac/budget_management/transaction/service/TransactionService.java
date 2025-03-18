@@ -102,7 +102,7 @@ public class TransactionService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         Transaction transaction = transactionRepository.findById(id)
-                .orElseThrow(() -> new TransactionNotFoundException("Transaction with id: " + id + "not found"));
+                .orElseThrow(() -> new TransactionNotFoundException("Transaction with id: " + id + " not found"));
 
         if (!transaction.getUser().getId().equals(user.getId())) {
             throw new AccessDeniedException("You are not allowed to delete this transaction");

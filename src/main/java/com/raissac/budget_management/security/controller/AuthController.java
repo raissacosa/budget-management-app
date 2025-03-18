@@ -1,11 +1,9 @@
 package com.raissac.budget_management.security.controller;
 
-import com.raissac.budget_management.security.UserService;
-import com.raissac.budget_management.security.config.JwtFilter;
+import com.raissac.budget_management.security.service.UserService;
 import com.raissac.budget_management.security.config.JwtUtil;
 import com.raissac.budget_management.security.dto.AuthRequest;
 import com.raissac.budget_management.security.dto.RegisterRequest;
-import com.raissac.budget_management.security.entity.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

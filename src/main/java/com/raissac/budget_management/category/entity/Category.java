@@ -25,6 +25,4 @@ public class Category {
     @Column(nullable = false)
     private boolean active;
 
-    @OneToMany(mappedBy = "category")
-    private List<Transaction> transactions;
 }

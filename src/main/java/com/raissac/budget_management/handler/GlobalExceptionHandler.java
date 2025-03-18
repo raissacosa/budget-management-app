@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
                 .body(ExceptionResponse.builder()
                         .errorCode(HttpStatus.UNAUTHORIZED.value())
                         .error("Invalid credentials")
-                        .errorDescription("Email or password is inncorect")
+                        .errorDescription("Email or password is inncorrect")
                         .build());
     }
 
