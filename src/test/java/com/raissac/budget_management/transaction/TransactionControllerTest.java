@@ -1,10 +1,7 @@
 package com.raissac.budget_management.transaction;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.raissac.budget_management.category.controller.CategoryController;
-import com.raissac.budget_management.category.dto.CategoryRequest;
 import com.raissac.budget_management.category.entity.Category;
-import com.raissac.budget_management.category.repository.CategoryRepository;
 import com.raissac.budget_management.common.PageResponse;
 import com.raissac.budget_management.exception.*;
 import com.raissac.budget_management.handler.GlobalExceptionHandler;
@@ -37,7 +34,6 @@ import java.time.Month;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;

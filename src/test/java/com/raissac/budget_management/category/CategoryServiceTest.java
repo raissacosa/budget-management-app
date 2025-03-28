@@ -41,7 +41,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    void shouldSaveCategory_whenCategoryRequestIsValid(){
+    void createCategory_shouldSaveCategory_whenCategoryRequestIsValid(){
 
         Category savedCategory = categoryService.createCategory(categoryRequest);
 
@@ -51,7 +51,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    void shouldThrowException_whenCategoryAlreadyExists(){
+    void createCategory_shouldThrowException_whenCategoryAlreadyExists(){
 
         Category newCategory = Category.builder()
                 .name("Travel")
@@ -65,7 +65,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    void shouldUpdateCategory_whenCategoryUpdateRequestIsValid(){
+    void updateCategory_shouldUpdateCategory_whenCategoryUpdateRequestIsValid(){
 
         Category savedCategory = categoryService.createCategory(categoryRequest);
 
@@ -78,14 +78,14 @@ public class CategoryServiceTest {
     }
 
     @Test
-    void shouldThrowException_whenCategoryIsNotFound(){
+    void updateCategory_shouldThrowException_whenCategoryIsNotFound(){
 
         assertThrows(CategoryNotFoundException.class, () -> categoryService.updateCategory(1L, categoryUpdateRequest));
 
     }
 
     @Test
-    void shouldThrowException_whenCategoryAlreadyExistsOnUpdate(){
+    void updateCategory_shouldThrowException_whenCategoryAlreadyExistsOnUpdate(){
 
         Category travelCategory = Category.builder()
                 .name("Travel")
@@ -108,7 +108,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    void shouldReturnPagedCategories_whenFindAllIsCalled() {
+    void findAllCategories_shouldReturnPagedCategories_whenFindAllIsCalled() {
 
         categoryRepository.deleteAll();
 
@@ -127,7 +127,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    void shouldReturnPagedCategories_whenFindAllActiveIsCalled() {
+    void findAllActiveCategories_shouldReturnPagedCategories_whenFindAllActiveIsCalled() {
 
         categoryRepository.deleteAll();
 

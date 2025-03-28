@@ -13,12 +13,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -40,10 +40,10 @@ public class UserServiceTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @MockitoBean
+    @MockBean
     private AuthenticationManager authenticationManager;
 
-    @MockitoBean
+    @MockBean
     private JwtUtil jwtUtil;
 
     private RegisterRequest registerRequest;
@@ -60,7 +60,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void shouldThrowException_whenEmailAlreadyExists(){
+    void register_shouldThrowException_whenEmailAlreadyExists(){
 
         User existingUser = User.builder()
                 .firstName("Ana")
@@ -77,7 +77,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void shouldSaveUser_whenRegisterRequestIsValid(){
+    void register_shouldSaveUser_whenRegisterRequestIsValid(){
 
         User savedUser = userService.register(registerRequest);
 
@@ -89,7 +89,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void shouldReturnToken_whenLoginIsValid(){
+    void login_shouldReturnToken_whenLoginIsValid(){
 
         AuthRequest authRequest = new AuthRequest("ana.popescu@mail.com", "parola123");
 
@@ -107,7 +107,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void shouldThrowException_whenLoginFails(){
+    void login_shouldThrowException_whenLoginFails(){
 
         AuthRequest authRequest = new AuthRequest("ana.popescu@mail.com", "parola123");
 

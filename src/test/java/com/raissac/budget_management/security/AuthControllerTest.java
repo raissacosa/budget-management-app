@@ -12,10 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
@@ -31,23 +31,23 @@ public class AuthControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockitoBean
+    @MockBean
     private UserService userService;
 
-    @MockitoBean
+    @MockBean
     private AuthenticationManager authenticationManager;
 
-    @MockitoBean
+    @MockBean
     private JwtUtil jwtUtil;
 
-    @MockitoBean
+    @MockBean
     private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
     private ObjectMapper objectMapper;
 
     @Test
-    void shouldReturn200_whenRegisterIsValid() throws Exception {
+    void register_shouldReturn200_whenRegisterIsValid() throws Exception {
         RegisterRequest registerRequest = new RegisterRequest(
                 "Ana",
                 "Popescu",
@@ -64,7 +64,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    void shouldReturn400_whenRegisterIsInvalid() throws Exception {
+    void register_shouldReturn400_whenRegisterIsInvalid() throws Exception {
         RegisterRequest registerRequest = new RegisterRequest(
                 "",
                 "",
@@ -81,7 +81,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    void shouldReturn409_whenEmailAlreadyUsed() throws Exception{
+    void register_shouldReturn409_whenEmailAlreadyUsed() throws Exception{
         RegisterRequest registerRequest = new RegisterRequest(
                 "Ana",
                 "Popescu",
@@ -100,7 +100,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    void shouldReturn200_whenLoginIsValid() throws Exception {
+    void login_shouldReturn200_whenLoginIsValid() throws Exception {
         AuthRequest request = new AuthRequest("ana.popescu@mail.com", "parola123");
 
         when(userService.login(eq(request), any(), any())).thenReturn("token");
@@ -114,7 +114,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    void shouldReturn401_whenLoginFails() throws Exception {
+    void login_shouldReturn401_whenLoginFails() throws Exception {
         AuthRequest request = new AuthRequest("ana.popescu@mail.com", "parolagresita");
 
         when(userService.login(eq(request), any(), any())).thenThrow(new BadCredentialsException("Bad credentials"));

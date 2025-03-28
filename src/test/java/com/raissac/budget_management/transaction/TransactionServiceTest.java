@@ -141,7 +141,7 @@ public class TransactionServiceTest {
     }
 
     @Test
-    void shouldSaveTransaction_whenCategoryRequestIsValid() {
+    void createTransaction_shouldSaveTransaction_whenCategoryRequestIsValid() {
 
         TransactionRequest request = new TransactionRequest(
                 BigDecimal.valueOf(50.5),
@@ -161,7 +161,7 @@ public class TransactionServiceTest {
     }
 
     @Test
-    void shouldThrowException_whenUserNotFound() {
+    void createTransaction_shouldThrowException_whenUserNotFound() {
 
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken("user2@mail.com", null)
@@ -179,7 +179,7 @@ public class TransactionServiceTest {
     }
 
     @Test
-    void shouldThrowException_whenCategoryNotFound() {
+    void createTransaction_shouldThrowException_whenCategoryNotFound() {
 
         TransactionRequest request = new TransactionRequest(BigDecimal.valueOf(50.5),
                 LocalDate.of(2025,2,1),
@@ -192,7 +192,7 @@ public class TransactionServiceTest {
     }
 
     @Test
-    void shouldReturnPagedTransactions_whenFindAllIsCalled() {
+    void findAllTransactions_shouldReturnPagedTransactions() {
 
         transactionRepository.deleteAll();
 
@@ -212,7 +212,7 @@ public class TransactionServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionUserNotFound_whenFindAllIsCalled() {
+    void findAllTransactions_shouldThrowException_whenUserNotFound() {
 
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken("user2@mail.com", null)
@@ -223,7 +223,7 @@ public class TransactionServiceTest {
     }
 
     @Test
-    void shouldDeleteTransaction_whenUserIsOwner() {
+    void deleteTransaction_shouldDeleteTransaction_whenUserIsOwner() {
 
         Transaction transactionDelete = transactionRepository.save(
                 Transaction.builder()
@@ -242,14 +242,14 @@ public class TransactionServiceTest {
     }
 
     @Test
-    void shouldThrowException_whenTransactionNotFound() {
+    void deleteTransaction_shouldThrowException_whenTransactionNotFound() {
 
         assertThrows(TransactionNotFoundException.class,
                 () -> transactionService.deleteTransaction(999L));
     }
 
     @Test
-    void shouldThrowException_whenUserIsNotOwner() {
+    void deleteTransaction_shouldThrowException_whenUserIsNotOwner() {
 
         transactionRepository.deleteAll();
 
@@ -273,7 +273,7 @@ public class TransactionServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionUserNotFound_whenDeleteTransactionIsCalled() {
+    void deleteTransaction_shouldThrowException_whenUserNotFound() {
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken("user2@mail.com", null)
         );
@@ -283,7 +283,7 @@ public class TransactionServiceTest {
     }
 
     @Test
-    void shouldReturnCorrectBalance_forUserWithTransactions() {
+    void getAccountBalance_shouldReturnCorrectBalance_forUserWithTransactions() {
 
         transactionRepository.deleteAll();
 
@@ -300,7 +300,7 @@ public class TransactionServiceTest {
     }
 
     @Test
-    void shouldTotalSpentPerCategory_forUserWithTransactions() {
+    void getTotalSpentPerCategory_shouldTotalSpentPerCategory_forUserWithTransactions() {
 
         transactionRepository.deleteAll();
 
@@ -321,7 +321,7 @@ public class TransactionServiceTest {
     }
 
     @Test
-    void shouldReturnTopSpendingCategories_forUserWithTransactions() {
+    void getTopSpendingCategories_shouldReturnTopSpendingCategories_forUserWithTransactions() {
 
         transactionRepository.deleteAll();
 
@@ -341,7 +341,7 @@ public class TransactionServiceTest {
     }
 
     @Test
-    void shouldReturnMonthlySummary_forUserWithTransactions() {
+    void getMonthlySummary_shouldReturnMonthlySummary_forUserWithTransactions() {
 
         transactionRepository.deleteAll();
 
@@ -360,7 +360,7 @@ public class TransactionServiceTest {
     }
 
     @Test
-    void shouldExportTransactionsToCSV_forUserWithTransactions() {
+    void exportTransactionsToCSV_shouldExportTransactionsToCSV_forUserWithTransactions() {
 
         transactionRepository.deleteAll();
 

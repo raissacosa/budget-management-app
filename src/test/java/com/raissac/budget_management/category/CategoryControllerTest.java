@@ -14,9 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 
@@ -36,22 +36,22 @@ public class CategoryControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockitoBean
+    @MockBean
     private CategoryService categoryService;
 
-    @MockitoBean
+    @MockBean
     private JwtUtil jwtUtil;
 
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockitoBean
+    @MockBean
     private CustomUserDetailsService customUserDetailsService;
 
 
     @WithMockUser(roles = "ADMIN")
     @Test
-    void shouldReturn200_whenCategoryRequestIsValid() throws Exception {
+    void createCategory_shouldReturn200_whenCategoryRequestIsValid() throws Exception {
 
         CategoryRequest request = new CategoryRequest("Food");
 
@@ -64,7 +64,7 @@ public class CategoryControllerTest {
 
     @WithMockUser(roles = "ADMIN")
     @Test
-    void shouldReturn400_whenCategoryRequestIsInvalid() throws Exception {
+    void createCategory_shouldReturn400_whenCategoryRequestIsInvalid() throws Exception {
 
         CategoryRequest request = new CategoryRequest("");
 
@@ -77,7 +77,7 @@ public class CategoryControllerTest {
 
     @WithMockUser(roles = "ADMIN")
     @Test
-    void shouldReturn200_whenCategoryUpdateRequestIsValid() throws Exception {
+    void updateCategory_shouldReturn200_whenCategoryUpdateRequestIsValid() throws Exception {
 
         CategoryUpdateRequest request = new CategoryUpdateRequest("Food", false);
 
@@ -90,7 +90,7 @@ public class CategoryControllerTest {
 
     @WithMockUser(roles = "ADMIN")
     @Test
-    void shouldReturn400_whenCategoryUpdateRequestIsInvalid() throws Exception {
+    void updateCategory_shouldReturn400_whenCategoryUpdateRequestIsInvalid() throws Exception {
 
         CategoryUpdateRequest request = new CategoryUpdateRequest("", null);
 
@@ -103,7 +103,7 @@ public class CategoryControllerTest {
 
     @WithMockUser(roles = "ADMIN")
     @Test
-    void shouldReturn404_whenCategoryNotFound() throws Exception {
+    void updateCategory_shouldReturn404_whenCategoryNotFound() throws Exception {
         CategoryUpdateRequest request = new CategoryUpdateRequest("Test", true);
 
         doThrow(new CategoryNotFoundException("Category not found"))
@@ -117,7 +117,7 @@ public class CategoryControllerTest {
 
     @WithMockUser(roles = "ADMIN")
     @Test
-    void shouldReturn200AndListOfCategories_whenRequestIsValid() throws Exception {
+    void findAllCategories_shouldReturn200AndListOfCategories_whenRequestIsValid() throws Exception {
 
         List<CategoryResponse> categories = List.of(
                 new CategoryResponse(1L, "Food", true),
@@ -149,7 +149,7 @@ public class CategoryControllerTest {
 
     @WithMockUser(roles = "ADMIN")
     @Test
-    void shouldReturn200AndListOfActiveCategories_whenRequestIsValid() throws Exception {
+    void findAllActiveCategories_shouldReturn200AndListOfActiveCategories_whenRequestIsValid() throws Exception {
         // Arrange
         List<CategoryResponse> categories = List.of(
                 new CategoryResponse(1L, "Food", true),
